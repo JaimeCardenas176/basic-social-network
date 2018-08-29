@@ -188,4 +188,34 @@ function listUsers(req, res){
 
 }
 
-module.exports = { home, save, login, getUser, listUsers }
+//editar datos de un usuario
+function updateUser(req, res){
+	var userId = req.params.id;
+	var userUpdated = req.body;
+	//borrar propiedad password
+	delete userUpdated.password;
+	if(userId != req.user.sub){
+		return res.status(500)
+					.send({
+						message:'no tienes permiso para actualizar los datos del usuario'
+					});
+	}
+	
+	User.findByIdAndUpdate(userId, userUpdated, {new:true}, (err, userUp) => {
+		if(err)
+			return res.status(500)
+						.send({
+							message:'error en la petición'
+						});
+		if(!userUp)
+			return res.status(404)
+						.send({
+							message:'no se ha podido actualizar el usuario'
+						});
+		return res.status(201)
+					.send({user:userUp});
+	});
+
+}
+
+module.exports = { home, save, login, getUser, listUsers, updateUser }

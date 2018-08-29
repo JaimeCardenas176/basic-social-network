@@ -15,4 +15,6 @@ api.get('/users/:page?', auth.ensureAuth, UserController.listUsers);
 api.post('/register', UserController.save);
 api.post('/login', UserController.login);
 
+api.put('/update-user/:id', auth.ensureAuth, UserController.updateUser);
+
 module.exports = api;
