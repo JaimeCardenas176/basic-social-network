@@ -1,11 +1,18 @@
 'use strict'
 
-var express = requires('express');
-var UserController = requires('../controller/user');
+var express = require('express');
+var UserController = require('../controllers/user');
+var auth = require('../middlewares/auth');
 
 var api = express.Router();
 
-api.get('/home', UserController.home);
+
+api.get('/home', auth.ensureAuth, UserController.home);
+api.get('/user/:id', auth.ensureAuth, UserController.getUser);
+api.get('/users/:page?', auth.ensureAuth, UserController.listUsers);
+
+
 api.post('/register', UserController.save);
+api.post('/login', UserController.login);
 
 module.exports = api;
