@@ -1,0 +1,363 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pa",
+				"password"
+			],
+			[
+				"se",
+				"send"
+			],
+			[
+				"user",
+				"user_routes"
+			],
+			[
+				"us",
+				"UserController"
+			],
+			[
+				"Sce",
+				"FolloSchema"
+			],
+			[
+				"m",
+				"mongoose"
+			],
+			[
+				"Pub",
+				"PublicationSchema"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "'use strict'\n\nvar mongoose = require('mongoose');\nvar Schema = mongoose.Schema;\n\nvar MessageSchema = Schema({\n\temmiter: {type: Schema.ObjectId, ref:'User'},\n\treceiver: {type: Schema.ObjectId, ref:'User'},\n\ttext: String,\n\tcreated_at: String\n});\n\nmodule.exports = mongoose.model('Message', MessageSchema);",
+			"file": "backend/models/message.js",
+			"file_size": 0,
+			"file_write_time": 131799480747660647,
+			"settings":
+			{
+				"buffer_size": 303,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "'use strict'\nvar bcrypt = require('bcrypt-nodejs');\n\nvar User = require('../models/user.js');\n\nfunction home(req, res){\n\tres.status(200)\n\t.send({\n\t\tmessage: 'pruebas en el servidor de nodeJS'\n\t});\n}\n\nfunction save(req, res){\n\tvar params = req.body;\n\tvar user = new User();\n\n\tif( params.name &&\n\t\tparams.surname &&\n\t\tparams.email &&\n\t\tparams.password &&\n\t\tparams.nick){\n\n\t\tuser.name = params.name;\n\t\tuser.surname = params.surname;\n\t\tuser.email = params.email;\n\t\tuser.nick = params.nick;\n\t\tuser.role = 'ROLE_USER',\n\t\tuser.image = null,\n\n\t\tuser.password = bcrypt.hash(params.password, null, null, (err, hash) =>{\n\t\t\tuser.password = hash;\n\t\t\tuser.save((err, User) => {\n\t\t\t\tif(err) \n\t\t\t\t\treturn res.status(500)\n\t\t\t\t\t\t\t\t.send({\n\t\t\t\t\t\t\t\t\tmessage: err.message\n\t\t\t\t\t\t\t\t});\n\t\t\t\tif (User){\n\t\t\t\t\treturn res.status(200)\n\t\t\t\t\t\t\t\t.send({\n\t\t\t\t\t\t\t\t\tuser: User\n\t\t\t\t\t\t\t\t});\n\t\t\t\t}else{\n\t\t\t\t\tres.status(404)\n\t\t\t\t\t\t.send({\n\t\t\t\t\t\t\tmessage: 'no se ha registrado el usuario'\n\t\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t});\n\t\t});\n\n\t}else{\n\t\tres.status(200)\n\t\t\t.send({\n\t\t\t\tmessage:'rellena todos los campos'\n\t\t\t})\n\t}\n}\n\nmodule.exports = { home, save }",
+			"file": "backend/controllers/user.js",
+			"file_size": 1043,
+			"file_write_time": 131799501576024891,
+			"settings":
+			{
+				"buffer_size": 1099,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "backend/routes/user.js",
+			"settings":
+			{
+				"buffer_size": 237,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "'use strict'\n\nvar express = require('express');\nvar bodyParser = require('body-parser');\n\nvar app = express();\n\n//cargar rutas\nvar user_routes = require('./routes/user');\n\n//middlewares\napp.use(bodyParser.urlencoded({extended:false}));\napp.use(bodyParser.json());\n\n//cors\n\n//rutas\napp.use('/api/user', user_routes);\n\n//esportar\nmodule.exports = app;",
+			"file": "backend/app.js",
+			"file_size": 352,
+			"file_write_time": 131799494076812378,
+			"settings":
+			{
+				"buffer_size": 349,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/jaime/Documents/repos/basic-social-network",
+		"/home/jaime/Documents/repos/basic-social-network/backend",
+		"/home/jaime/Documents/repos/basic-social-network/backend/controllers",
+		"/home/jaime/Documents/repos/basic-social-network/backend/routes"
+	],
+	"file_history":
+	[
+		"/home/jaime/Documents/repos/basic-social-network/backend/package.json",
+		"/home/jaime/Documents/repos/basic-social-network/backend/models/publication.js",
+		"/home/jaime/Documents/repos/basic-social-network/backend/models/user.js",
+		"/home/jaime/Documents/repos/basic-social-network/backend/models/follow.js",
+		"/home/jaime/Documents/repos/basic-social-network/backend/package-lock.json",
+		"/home/jaime/Documents/repos/basic-social-network/backend/index.js"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "backend/models/message.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								303,
+								303
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "backend/controllers/user.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1099,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1098,
+								1098
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 495.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "backend/routes/user.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 237,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								237,
+								237
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "backend/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 349,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								112,
+								112
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "untitled.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 154.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
