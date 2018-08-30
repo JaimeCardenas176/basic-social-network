@@ -1,7 +1,8 @@
 'use strict'
 var bcrypt = require('bcrypt-nodejs');
 
-var User = require('../models/user.js');
+var User = require('../models/user');
+var Follow = require('../models/follow');
 
 var jwt = require('../services/jwt');
 
@@ -151,9 +152,51 @@ function getUser(req, res){
 						.send({
 							message:'usuario no encontrado'
 						});
-		return res.status(200)
-					.send({user});
+
+		followThisUser(req.user.sub, userId).then((value) => {
+			user.password=undefined;
+			return res.status(200)
+						.send({
+							user,
+							following: value.following,
+							followed: value.followed
+						});
+		});
+
 	});
+}
+
+async function followThisUser(identity_user_id, user_id){
+	try {
+        var following = await Follow.findOne({ user: identity_user_id, followed: user_id})
+        	.exec()
+            .then((following) => {
+                //console.log(following);
+                return following;
+            })
+            .catch((err)=>{
+                return handleerror(err);
+            });
+        
+        var followed = await Follow.findOne({ user: user_id, followed: identity_user_id})
+        	.exec()
+            .then((followed) => {
+                //console.log(followed);
+                return followed;
+            })
+            .catch((err)=>{
+                return handleerror(err);
+            });
+        
+        return {
+            following: following,
+            followed: followed
+        }
+
+    } catch(ex){
+        console.log(ex);
+    }
+		
 }
 
 //devolver un listado paginado de usuarios
@@ -183,14 +226,105 @@ function listUsers(req, res){
 									message:'no se han encontrado usuarios'
 								});
 
-				return res.status(200)
+				followUserIds(identity_user_id).then((value) => {
+
+
+					return res.status(200)
 							.send({
 								users,
+								users_following: value.following,
+								users_followed: value.followed,
 								total,
-								pages: Math.ceil(total/itemsPerPage)
+								pages: Math.ceil(total/itemsPerPage),
 							});
+				});
+				
 	});
 
+}
+
+async function followUserIds(user_id){
+	try{
+
+		var following = await Follow.find({'user':user_id})
+								.select({'_id':0, '__v':0, 'user':0})
+								.exec().then((follows) => {
+									
+									var follows_clean = [];
+
+									follows.forEach((follow) => {
+										follows_clean.push(follow.followed);
+									});
+									console.log(follows_clean);
+									return follows_clean;
+								})
+								.catch((err) => {
+									return handleError(err);
+								});
+
+
+		var followed = await Follow.find({'followed':user_id})
+								.select({'_id':0, '__v':0, 'followed':0})
+								.exec().then((follows) => {
+									
+									var follows_clean = [];
+
+									follows.forEach((follow) => {
+										follows_clean.push(follow.user);
+									});
+									console.log(follows_clean);
+									return follows_clean;
+								})
+								.catch((err) => {
+									return handleError(err);
+								});
+		return {
+			following: following,
+			followed: followed
+		}
+	}catch(ex){
+		console.log(ex);
+	}
+}
+
+function counters(req, res){
+	var userId = req.user.sub;
+
+	if(req.params.id)
+		userId = req.params.id;
+
+	countFollow(userId).then((value) => {
+		return res.status(200)
+					.send({value});
+	});
+}
+
+async function countFollow(user_id){
+	try{
+		var following = await Follow.count({'user': user_id})
+							.exec()
+							.then((count) => {
+								return count;
+							})
+							.catch((err) => {
+								return handleError(err);
+							});
+		var followed = await Follow.count({'followed': user_id})
+								.exec()
+								.then((count) => {
+									return count;
+								})
+								.catch((err) => {
+									return handleError(err);
+								});
+		return {
+			following: following,
+			folowed: followed
+		}
+
+	}catch(ex){
+		console.log(ex);
+	}
 }
 
 //editar datos de un usuario
@@ -299,4 +433,4 @@ function getImgFile(req, res){
 		}
 	});
 }
-module.exports = { home, save, login, getUser, listUsers, updateUser, uploadImg, getImgFile }
+module.exports = { home, save, login, getUser, listUsers, counters, updateUser, uploadImg, getImgFile }

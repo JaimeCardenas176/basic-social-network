@@ -18,6 +18,7 @@ api.get('/home', auth.ensureAuth, UserController.home);
 api.get('/user/:id', auth.ensureAuth, UserController.getUser);
 api.get('/users/:page?', auth.ensureAuth, UserController.listUsers);
 api.get('/get-image-user/:imageFile', UserController.getImgFile);
+api.get('/counters/:id?', auth.ensureAuth, UserController.counters);
 
 api.post('/register', UserController.save);
 api.post('/login', UserController.login);

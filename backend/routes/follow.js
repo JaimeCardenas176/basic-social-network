@@ -15,7 +15,7 @@ var api = express.Router();
 api.get('/pruebas-follow', auth.ensureAuth, FollowController.prueba);
 api.get('/following/:id?/:page?', auth.ensureAuth, FollowController.listFollowingUsers);
 api.get('/followed/:id?/:page?', auth.ensureAuth, FollowController.listFollowedUsers);
-
+api.get('/get-my-follows/:followed?', auth.ensureAuth, FollowController.getMyFollows);
 
 api.post('/follow', auth.ensureAuth, FollowController.saveFollow);
 
