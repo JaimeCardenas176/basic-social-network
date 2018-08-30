@@ -284,4 +284,19 @@ function removeUploadedFiles(res, file_path, msg){
 			});
 }
 
-module.exports = { home, save, login, getUser, listUsers, updateUser, uploadImg }
+function getImgFile(req, res){
+	var img_file = req.params.imageFile;
+	var path_file = './uploads/users/'+img_file;
+
+	fs.exists(path_file, (exists) => {
+		if(exists){
+			res.sendFile(path.resolve(path_file));
+		}else{
+			res.status(200)
+				.send({
+					message:'no existe la imagen'
+				});
+		}
+	});
+}
+module.exports = { home, save, login, getUser, listUsers, updateUser, uploadImg, getImgFile }

@@ -2,7 +2,10 @@
 
 var mongo = require('mongoose');
 var app = require('./app');
+
+//port
 var port = 3800;
+
 //conexion a la base de datos
 mongo.Promise = global.Promise;
 mongo.connect('mongodb://localhost:27017/basic_social_network', { useNewUrlParser: true })
