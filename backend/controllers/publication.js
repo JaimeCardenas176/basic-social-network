@@ -99,4 +99,127 @@ function getPublications(req, res){
 			});
 }
 
-module.exports = { probando, savePublication, getPublications }
+function getPublication(req, res){
+	var publicationId= req.params.id;
+
+	Publication.findById(publicationId, (err, publication) => {
+		if(err)
+			return res.status(500)
+						.send({
+							message: 'error al devolver la publicación'
+						});
+
+		if(!publication)
+			return res.status(404)
+						.send({
+							message:'no se ha encontrado la publicación'
+						});
+
+		return res.status(200).send({publication});
+	});
+}
+
+function deletePublication(req, res){
+	var publicationId=req.params.id;
+
+	Publication.find({'user':req.user.sub, '_id':publicationId}).remove((err, publicationRemoved) => {
+		if(err)
+			return res.status(500)
+						.send({
+							message: 'error al borrar la publicación'
+						});
+
+		if(!publicationRemoved)
+			return res.status(404)
+						.send({
+							message:'no se ha borrado la publicación'
+						});
+
+		return res.status(200).send({publication: publicationRemoved});
+	});
+}
+
+//subir imagen/avatar
+function uploadImg(req, res){
+	var publicationId = req.params.id;
+
+
+	if(req.files){
+		var file_path = req.files.image.path;
+		//console.log(file_path);
+		var file_split = file_path.split('\/');
+		//console.log(file_split);
+
+		var file_name = file_split[2];
+		//console.log(file_name);
+		var ext_split = file_name.split('\.');
+		//console.log(ext_split);
+		var file_ext = ext_split[1];
+		//console.log(file_ext);
+
+
+		if(file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg'){
+			Publication.findOne({'user':req.user.sub, '_id':publicationId}).exec((err, publucation) => {
+				if(publication){
+					//actualizar el dcumento del usuario logueado
+					Publication.findByIdAndUpdate(publicationId, {file: file_name}, {new:true}, (err, publicationUp) =>{
+					if(err)
+						return res.status(500)
+									.send({
+										message:'error en la petición'
+									});
+
+					if(!publicationUp)
+						return res.status(404)
+									.send({
+										message:'no se ha podido actualizar la publicación'
+								});
+
+					return res.status(200).send({publication: publicationUp});
+
+					});
+
+				}else{
+				return removeUploadedFiles(res, file_path, 'no tienes permiso para editar esta publicación');
+				}
+				});
+		}else{
+			//borrado de archivo en caso de que algo vaya mal{
+			return removeUploadedFiles(res, file_path, 'extensión no válida');
+		}
+
+	}else{
+		return res.status(200)
+					.send({
+						message:'no se han subido archivos'
+					});
+	}
+}
+
+function removeUploadedFiles(res, file_path, msg){
+
+	fs.unlink(file_path, (err) =>{
+					return res.status(200)
+								.send({
+									message:msg
+								});
+			});
+}
+
+function getImgFile(req, res){
+	var img_file = req.params.imageFile;
+	var path_file = './uploads/publications/'+img_file;
+
+	fs.exists(path_file, (exists) => {
+		if(exists){
+			res.sendFile(path.resolve(path_file));
+		}else{
+			res.status(200)
+				.send({
+					message:'no existe la imagen'
+				});
+		}
+	});
+}
+
+module.exports = { probando, savePublication, getPublications, getPublication, deletePublication, uploadImg, getImgFile }

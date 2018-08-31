@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt-nodejs');
 
 var User = require('../models/user');
 var Follow = require('../models/follow');
+var Publication = require('../models/publication');
 
 var jwt = require('../services/jwt');
 
@@ -317,9 +318,19 @@ async function countFollow(user_id){
 								.catch((err) => {
 									return handleError(err);
 								});
+
+		var publications = await Publication.count({'user': userId})
+								.exec()
+								.then( (count) => {
+									return count;
+								})
+								.catch((err) => {
+									return handleError(err);
+								});
 		return {
 			following: following,
-			folowed: followed
+			folowed: followed,
+			publications: publications
 		}
 
 	}catch(ex){
