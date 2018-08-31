@@ -146,7 +146,7 @@ function listFollowedUsers(req, res){
 
 }
 
-//lisar usuarios
+//lisar usuarios sin paginacion
 function getMyFollows(req, res){
 	var userId = req.user.sub;
 
