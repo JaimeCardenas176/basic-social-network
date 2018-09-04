@@ -256,7 +256,7 @@ async function followUserIds(user_id){
 									follows.forEach((follow) => {
 										follows_clean.push(follow.followed);
 									});
-									console.log(follows_clean);
+									//console.log(follows_clean);
 									return follows_clean;
 								})
 								.catch((err) => {
@@ -273,7 +273,7 @@ async function followUserIds(user_id){
 									follows.forEach((follow) => {
 										follows_clean.push(follow.user);
 									});
-									console.log(follows_clean);
+									//console.log(follows_clean);
 									return follows_clean;
 								})
 								.catch((err) => {
