@@ -1,5 +1,15 @@
-/*cabecera*/
+/*General*/
+.h1-strong{
+	font-size: 35px;
+	font-weight: bold;
+	margin-left: 13px;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #eee;
+}
 
+
+/*cabecera*/
 .navigation{
 	margin:0px;
 	padding: 0px !important;
