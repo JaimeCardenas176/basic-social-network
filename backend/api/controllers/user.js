@@ -1,17 +1,12 @@
 'use strict'
 var bcrypt = require('bcrypt-nodejs');
-
 var User = require('../models/user');
 var Follow = require('../models/follow');
 var Publication = require('../models/publication');
-
 var jwt = require('../services/jwt');
-
 var fs = require('fs');
 var path = require('path');
-
 var pagination = require('mongoose-pagination');
-
 var multipart = require('connect-multiparty');
 
 //metodo de prueba
@@ -106,7 +101,7 @@ function login(req, res){
 			bcrypt.compare(password, user.password, (err, check) => {
 			if(check){
 				//devolver datos del usuario
-				if(params.getToken){
+				if(jwt.createToken(user)){
 					return res.status(200)
 								.send({
 									token: jwt.createToken(user)

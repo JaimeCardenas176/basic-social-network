@@ -4,7 +4,6 @@ var path = require('path');
 var fs = require('fs');
 var moment = require('moment');
 var pagination = require('mongoose-pagination');
-
 var Publication = require('../models/publication');
 var User = require('../models/user');
 var Follow = require('../models/follow');
@@ -18,12 +17,10 @@ function probando(req, res){
 
 function savePublication(req, res){
 	var params = req.body;
-
-
 	if(!params.text)
-		return res.status(200)
+		return res.status(400)
 					.send({
-						message:'la publicación debe contener un texto'
+						message:'La publicación debe contener un texto'
 					});
 
 	var publication = new Publication();
@@ -36,13 +33,13 @@ function savePublication(req, res){
 		if(err)
 			return res.status(500)
 						.send({
-							message:'error al guardar la publicación'
+							message:'Error al guardar la publicación'
 						});
 
 		if(!publicationStored)
-			return res.status(404)
+			return res.status(500)
 						.send({
-							message:'la publicación no ha sido guardada'
+							message:'La publicación no ha sido guardada'
 						});
 
 		return res.status(200).send({publication: publicationStored})
